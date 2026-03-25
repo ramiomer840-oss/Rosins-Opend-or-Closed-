@@ -3,758 +3,447 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rosins Restaurants Karte - Erweitert</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<title>Rosins Restaurants - Karten & Daten</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <style>
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
-
+ 
 :root {
   --primary: #c1121f;
   --secondary: #f77f00;
   --success: #06a77d;
-  --danger: #d62828;
   --text: #333;
   --bg: #f5f5f5;
   --card-bg: white;
   --border: #ddd;
 }
-
-body.dark-mode {
-  --text: #e0e0e0;
-  --bg: #1a1a1a;
-  --card-bg: #2a2a2a;
-  --border: #444;
-}
-
+ 
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  transition: background 0.3s, color 0.3s;
-}
-
-header {
-  background: linear-gradient(135deg, var(--primary) 0%, #8b0000 100%);
-  color: white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
   padding: 20px;
+  color: var(--text);
+}
+ 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+ 
+header {
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  color: white;
+  margin-bottom: 50px;
+  padding: 40px 20px;
 }
-
+ 
 header h1 {
-  margin: 0;
-  font-size: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+  font-size: 48px;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
-
-.header-controls {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
-.dark-toggle {
-  background: rgba(255,255,255,0.2);
-  border: 2px solid white;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s;
-}
-
-.dark-toggle:hover {
-  background: rgba(255,255,255,0.3);
-}
-
-#controls {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-  padding: 15px;
-  background: var(--card-bg);
-  margin: 10px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-input, select {
-  padding: 10px 12px;
-  border: 2px solid var(--border);
-  border-radius: 5px;
-  font-size: 14px;
-  background: var(--card-bg);
-  color: var(--text);
-  transition: border 0.3s;
-}
-
-input:focus, select:focus {
-  outline: none;
-  border-color: var(--primary);
-}
-
-#stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  padding: 15px;
-  margin: 10px;
-}
-
-.stat-card {
-  background: var(--card-bg);
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  border-left: 4px solid var(--primary);
-}
-
-.stat-card i {
-  color: var(--primary);
-  margin-right: 8px;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--primary);
-}
-
-#map {
-  height: 400px;
-  margin: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.controls-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  flex-wrap: wrap;
-}
-
-.sort-buttons {
-  display: flex;
-  gap: 5px;
-}
-
-.sort-btn {
-  padding: 8px 12px;
-  background: var(--card-bg);
-  border: 2px solid var(--border);
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s;
-  color: var(--text);
-}
-
-.sort-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
-.sort-btn.active {
-  background: var(--primary);
-  color: white;
-  border-color: var(--primary);
-}
-
-.export-btn {
-  padding: 10px 15px;
-  background: var(--success);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.export-btn:hover {
-  background: #048a6f;
-  transform: translateY(-2px);
-}
-
-table {
-  width: 95%;
-  margin: 15px auto;
-  border-collapse: collapse;
-  background: var(--card-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-th, td {
-  padding: 12px 15px;
-  border-bottom: 1px solid var(--border);
-  text-align: left;
-}
-
-th {
-  background: linear-gradient(135deg, var(--primary) 0%, #8b0000 100%);
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  user-select: none;
-}
-
-th:hover {
+ 
+header p {
+  font-size: 18px;
   opacity: 0.9;
 }
-
-tr:hover {
-  background: var(--border);
+ 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-bottom: 50px;
 }
-
-.status-badge {
+ 
+.card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+  border-top: 5px solid var(--primary);
+}
+ 
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+ 
+.card h2 {
+  color: var(--primary);
+  margin-bottom: 10px;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+ 
+.card p {
+  color: #666;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+ 
+.features {
+  list-style: none;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+ 
+.features li {
+  padding: 8px 0;
+  padding-left: 25px;
+  position: relative;
+  color: #555;
+}
+ 
+.features li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--success);
+  font-weight: bold;
+  font-size: 16px;
+}
+ 
+.button {
   display: inline-block;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.status-open {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-closed {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-.category-badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 15px;
-  font-size: 11px;
-  background: var(--secondary);
-  color: white;
-  margin: 2px;
-}
-
-.rating {
-  color: #ffc107;
-  font-size: 12px;
-}
-
-.action-btn {
-  padding: 6px 10px;
-  margin: 2px;
+  padding: 12px 24px;
   background: var(--primary);
   color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.3s, transform 0.2s;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
-  font-size: 12px;
-  transition: all 0.3s;
+  font-size: 14px;
+  font-weight: 600;
 }
-
-.action-btn:hover {
+ 
+.button:hover {
   background: #8b0000;
   transform: scale(1.05);
 }
-
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.6);
-  animation: fadeIn 0.3s;
+ 
+.button.secondary {
+  background: var(--secondary);
+  margin-left: 10px;
 }
-
-.modal.show {
+ 
+.button.secondary:hover {
+  background: #e66a00;
+}
+ 
+.button-group {
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background: var(--card-bg);
-  padding: 25px;
-  border-radius: 10px;
-  max-width: 500px;
-  width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-}
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  border-bottom: 2px solid var(--border);
-  padding-bottom: 10px;
-}
-
-.modal-header h2 {
-  margin: 0;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
-  color: var(--text);
-}
-
-.info-grid {
-  display: grid;
-  gap: 12px;
-}
-
-.info-item {
-  display: flex;
-  align-items: flex-start;
   gap: 10px;
+  flex-wrap: wrap;
 }
-
-.info-item i {
+ 
+.stats {
+  background: rgba(255,255,255,0.95);
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+ 
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+ 
+.stat {
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--primary) 0%, #8b0000 100%);
+  color: white;
+}
+ 
+.stat-number {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+ 
+.stat-label {
+  font-size: 14px;
+  opacity: 0.9;
+}
+ 
+.info-section {
+  background: rgba(255,255,255,0.95);
+  padding: 30px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+ 
+.info-section h2 {
   color: var(--primary);
-  margin-top: 3px;
-  min-width: 20px;
+  margin-bottom: 20px;
+  font-size: 28px;
 }
-
-.info-item strong {
-  color: var(--primary);
-  min-width: 100px;
+ 
+.info-section p {
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 15px;
 }
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+ 
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background: var(--success);
+  color: white;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin: 5px 5px 5px 0;
 }
-
+ 
+.footer {
+  text-align: center;
+  color: white;
+  padding: 30px;
+  opacity: 0.9;
+  font-size: 14px;
+}
+ 
+.emoji {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+ 
 @media (max-width: 768px) {
   header h1 {
-    font-size: 20px;
+    font-size: 32px;
   }
-
-  #controls {
+ 
+  .grid {
     grid-template-columns: 1fr;
   }
-
-  #map {
-    height: 300px;
+ 
+  .button-group {
+    flex-direction: column;
   }
-
-  table {
-    width: 98%;
-    font-size: 12px;
+ 
+  .button {
+    width: 100%;
+    text-align: center;
   }
-
-  th, td {
-    padding: 8px 10px;
-  }
-
-  .modal-content {
-    width: 95%;
-  }
-
-  .header-controls {
-    position: static;
-    justify-content: center;
-    padding-top: 10px;
+ 
+  .button.secondary {
+    margin-left: 0;
   }
 }
-
-.no-results {
-  text-align: center;
-  padding: 40px;
-  color: var(--text);
-  font-size: 16px;
-}
-
-.stats-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
-  margin: 10px 0;
-  flex-wrap: wrap;
-  gap: 10px;
+ 
+.highlight {
+  background: linear-gradient(120deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  padding: 20px;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary);
 }
 </style>
 </head>
 <body>
-<header>
-  <div class="header-controls">
-    <button class="dark-toggle" id="darkToggle" title="Dark Mode">
-      <i class="fas fa-moon"></i>
-    </button>
-  </div>
-  <h1>
-    <i class="fas fa-utensils"></i> Rosins Restaurants Karte
-  </h1>
-</header>
-
-<div id="controls">
-  <input id="search" placeholder="🔍 Restaurant oder Stadt..." type="text">
-  <select id="filterStatus">
-    <option value="alle">Status: Alle</option>
-    <option value="offen">Status: Offen</option>
-    <option value="geschlossen">Status: Geschlossen</option>
-  </select>
-  <select id="filterCategory">
-    <option value="alle">Kategorie: Alle</option>
-    <option value="Deutsch">Deutsch</option>
-    <option value="Mediterran">Mediterran</option>
-    <option value="Asiatisch">Asiatisch</option>
-    <option value="Modern">Modern</option>
-    <option value="Fisch">Fisch</option>
-  </select>
-</div>
-
-<div class="stats-header">
-  <div id="stats">
-    <div class="stat-card">
-      <i class="fas fa-store"></i> Gesamt: <span class="stat-value" id="total">0</span>
-    </div>
-    <div class="stat-card" style="border-left-color: #06a77d;">
-      <i class="fas fa-check-circle" style="color: #06a77d;"></i> Offen: <span class="stat-value" id="open" style="color: #06a77d;">0</span>
-    </div>
-    <div class="stat-card" style="border-left-color: #d62828;">
-      <i class="fas fa-times-circle" style="color: #d62828;"></i> Geschlossen: <span class="stat-value" id="closed" style="color: #d62828;">0</span>
+ 
+<div class="container">
+  <header>
+    <h1>🍽️ Rosins Restaurants</h1>
+    <p>Interaktive Karten & Daten zu allen Restaurants aus der TV-Show</p>
+  </header>
+ 
+  <div class="stats">
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-number">190+</div>
+        <div class="stat-label">Restaurants</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">19</div>
+        <div class="stat-label">Staffeln</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">4</div>
+        <div class="stat-label">Versionen</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">100%</div>
+        <div class="stat-label">Kostenlos</div>
+      </div>
     </div>
   </div>
-  <button class="export-btn" id="exportBtn" title="Als CSV exportieren">
-    <i class="fas fa-download"></i> Export CSV
-  </button>
-</div>
-
-<div id="map"></div>
-
-<div class="controls-row">
-  <h3 style="margin: 0; flex: 1;">Restaurants</h3>
-  <div class="sort-buttons">
-    <button class="sort-btn active" data-sort="name">Nach Name</button>
-    <button class="sort-btn" data-sort="city">Nach Stadt</button>
-    <button class="sort-btn" data-sort="rating">Nach Bewertung</button>
-  </div>
-</div>
-
-<table>
-  <thead>
-    <tr>
-      <th>Restaurant</th>
-      <th>Stadt</th>
-      <th>Kategorie</th>
-      <th>Bewertung</th>
-      <th>Status</th>
-      <th>Folge</th>
-      <th>Aktionen</th>
-    </tr>
-  </thead>
-  <tbody id="table"></tbody>
-</table>
-
-<!-- Modal für Detailansicht -->
-<div id="detailModal" class="modal">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 id="modalName"></h2>
-      <button class="close-btn" onclick="closeModal()">&times;</button>
-    </div>
-    <div id="modalDetails" class="info-grid"></div>
-  </div>
-</div>
-
-<script>
-const restaurants = [
-  {name: "Wallmüllerstuben", city: "Treuchtlingen", category: "Deutsch", status: "offen", episode: "Staffel 18", lat: 48.96, lng: 10.91, rating: 4.5, website: "www.wallmuellerstuben.de", youtube: "https://www.youtube.com/results?search_query=Wallmüllerstuben+Rosins+Restaurants"},
-  {name: "LeCoq", city: "Haan", category: "Mediterran", status: "geschlossen", episode: "Staffel 17", lat: 51.19, lng: 7.00, rating: 4.0, website: "", youtube: "https://www.youtube.com/results?search_query=LeCoq+Haan+Rosins+Restaurants"},
-  {name: "Bürgerstube", city: "Lambrecht", category: "Deutsch", status: "offen", episode: "Staffel 12", lat: 49.37, lng: 8.06, rating: 4.3, website: "www.buergerstube-lambrecht.de", youtube: "https://www.youtube.com/results?search_query=Bürgerstube+Lambrecht+Rosins+Restaurants"},
-  {name: "Waldcafé Forellenteich", city: "Braunlage", category: "Fisch", status: "offen", episode: "Staffel 19", lat: 51.72, lng: 10.61, rating: 4.7, website: "www.waldcafe-forellenteich.de", youtube: "https://www.youtube.com/results?search_query=Waldcafé+Forellenteich+Braunlage+Rosins"},
-  {name: "Zum Stausee", city: "Niederhausen", category: "Deutsch", status: "geschlossen", episode: "Staffel 10", lat: 49.78, lng: 7.67, rating: 3.8, website: "", youtube: "https://www.youtube.com/results?search_query=Zum+Stausee+Niederhausen+Rosins+Restaurants"},
-  {name: "Makoto", city: "Hamburg", category: "Asiatisch", status: "offen", episode: "Staffel 20", lat: 53.55, lng: 10.00, rating: 4.6, website: "www.makoto-hamburg.de", youtube: "https://www.youtube.com/results?search_query=Makoto+Hamburg+Rosins+Restaurants"},
-  {name: "Die Zwiebel", city: "Stuttgart", category: "Modern", status: "offen", episode: "Staffel 21", lat: 48.78, lng: 9.18, rating: 4.4, website: "www.zwiebel-stuttgart.de", youtube: "https://www.youtube.com/results?search_query=Die+Zwiebel+Stuttgart+Rosins+Restaurants"},
-  {name: "Fischkomtoir", city: "Bremen", category: "Fisch", status: "offen", episode: "Staffel 19", lat: 53.07, lng: 8.81, rating: 4.8, website: "www.fischkomtoir.de", youtube: "https://www.youtube.com/results?search_query=Fischkomtoir+Bremen+Rosins+Restaurants"}
-];
-
-let map;
-let markers = [];
-let currentSort = "name";
-let detailModal = document.getElementById("detailModal");
-
-// Initialisierung
-function initMap() {
-  map = L.map("map").setView([51.5, 10], 6);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
-  }).addTo(map);
-}
-
-function renderStars(rating) {
-  const fullStars = Math.floor(rating);
-  const hasHalf = rating % 1 !== 0;
-  let stars = '';
-  for (let i = 0; i < fullStars; i++) {
-    stars += '<i class="fas fa-star"></i>';
-  }
-  if (hasHalf) {
-    stars += '<i class="fas fa-star-half-alt"></i>';
-  }
-  for (let i = fullStars + (hasHalf ? 1 : 0); i < 5; i++) {
-    stars += '<i class="far fa-star"></i>';
-  }
-  return `<span class="rating">${stars} ${rating}</span>`;
-}
-
-function getFiltered() {
-  const search = document.getElementById("search").value.toLowerCase();
-  const statusFilter = document.getElementById("filterStatus").value;
-  const categoryFilter = document.getElementById("filterCategory").value;
-
-  return restaurants.filter(r => {
-    const matchSearch = r.name.toLowerCase().includes(search) || r.city.toLowerCase().includes(search);
-    const matchStatus = statusFilter === "alle" || r.status === statusFilter;
-    const matchCategory = categoryFilter === "alle" || r.category === categoryFilter;
-    return matchSearch && matchStatus && matchCategory;
-  });
-}
-
-function getSorted(data) {
-  const sorted = [...data];
-  switch(currentSort) {
-    case "name":
-      sorted.sort((a, b) => a.name.localeCompare(b.name));
-      break;
-    case "city":
-      sorted.sort((a, b) => a.city.localeCompare(b.city));
-      break;
-    case "rating":
-      sorted.sort((a, b) => b.rating - a.rating);
-      break;
-  }
-  return sorted;
-}
-
-function updateMap(data) {
-  markers.forEach(m => map.removeLayer(m));
-  markers = [];
-
-  data.forEach(r => {
-    const color = r.status === "offen" ? "#06a77d" : "#d62828";
-    const marker = L.circleMarker([r.lat, r.lng], {
-      radius: 10,
-      color: color,
-      fillColor: color,
-      fillOpacity: 0.8,
-      weight: 2
-    }).addTo(map);
-
-    marker.bindPopup(`
-      <div style="font-size: 14px;">
-        <b>${r.name}</b><br>
-        ${r.city}<br>
-        <span style="color: ${color}; font-weight: bold;">${r.status.toUpperCase()}</span><br>
-        ${renderStars(r.rating)}<br>
-        <a href="https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}" target="_blank">
-          🗺️ Navigation
+ 
+  <div class="grid">
+    <!-- Version 1: Komplett mit echten Daten -->
+    <div class="card">
+      <h2><i class="fas fa-map"></i> Alle 190 Restaurants</h2>
+      <div class="emoji">📍</div>
+      <p>Die <strong>komplette Version</strong> mit allen 190 echten Restaurants aus deinen Daten. Alle Staffeln (1-19), interaktive Karte, Filter nach Status und Staffel.</p>
+      <ul class="features">
+        <li>190 echte Restaurants</li>
+        <li>19 Staffeln</li>
+        <li>Interaktive Leaflet-Karte</li>
+        <li>Filter nach Status & Staffel</li>
+        <li>Statistiken</li>
+        <li>CSV-Export</li>
+      </ul>
+      <div class="button-group">
+        <a href="rosins-restaurants-all-190.html" class="button">
+          <i class="fas fa-globe"></i> Öffnen
         </a>
       </div>
-    `);
-    markers.push(marker);
-  });
-}
-
-function updateTable(data) {
-  const tbody = document.getElementById("table");
-  tbody.innerHTML = "";
-
-  if (data.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" class="no-results">Keine Restaurants gefunden</td></tr>';
-    return;
-  }
-
-  data.forEach(r => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td><strong>${r.name}</strong></td>
-      <td>${r.city}</td>
-      <td><span class="category-badge">${r.category}</span></td>
-      <td>${renderStars(r.rating)}</td>
-      <td><span class="status-badge status-${r.status}">${r.status.toUpperCase()}</span></td>
-      <td>${r.episode}</td>
-      <td>
-        <button class="action-btn" onclick="showDetails(${restaurants.indexOf(r)})">ℹ️ Info</button>
-        <a href="https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}" target="_blank" class="action-btn" style="text-decoration: none; display: inline-block;">🗺️ Karte</a>
-        <a href="${r.youtube}" target="_blank" class="action-btn" style="text-decoration: none; display: inline-block;">▶️ YouTube</a>
-      </td>
-    `;
-    tbody.appendChild(row);
-  });
-}
-
-function updateStats(data) {
-  const open = data.filter(r => r.status === "offen").length;
-  const closed = data.filter(r => r.status === "geschlossen").length;
-
-  document.getElementById("total").textContent = restaurants.length;
-  document.getElementById("open").textContent = open;
-  document.getElementById("closed").textContent = closed;
-}
-
-function update() {
-  const filtered = getFiltered();
-  const sorted = getSorted(filtered);
-
-  updateMap(sorted);
-  updateTable(sorted);
-  updateStats(sorted);
-}
-
-function showDetails(index) {
-  const r = restaurants[index];
-  document.getElementById("modalName").textContent = r.name;
-  
-  let details = `
-    <div class="info-item">
-      <i class="fas fa-map-marker-alt"></i>
-      <div>
-        <strong>Stadt:</strong><br>${r.city}
+      <div style="margin-top: 15px; font-size: 12px; color: #999;">
+        <span class="badge">Empfohlen ⭐</span>
       </div>
     </div>
-    <div class="info-item">
-      <i class="fas fa-utensils"></i>
-      <div>
-        <strong>Kategorie:</strong><br>${r.category}
+ 
+    <!-- Version 2: Komplett erweitert -->
+    <div class="card">
+      <h2><i class="fas fa-star"></i> Erweiterte Version</h2>
+      <div class="emoji">✨</div>
+      <p>Erweiterte Version mit 60+ erweiterten Beispielrestaurants, Bewertungen, Kategorien und Dark Mode für bessere UX.</p>
+      <ul class="features">
+        <li>60 Restaurants</li>
+        <li>⭐ Bewertungen (Sterne)</li>
+        <li>5 Kategorien</li>
+        <li>YouTube-Links</li>
+        <li>Website-Links</li>
+        <li>Dark Mode</li>
+      </ul>
+      <div class="button-group">
+        <a href="rosins_restaurants_komplett.html" class="button">
+          <i class="fas fa-globe"></i> Öffnen
+        </a>
       </div>
     </div>
-    <div class="info-item">
-      <i class="fas fa-star"></i>
-      <div>
-        <strong>Bewertung:</strong><br>${renderStars(r.rating)}
+ 
+    <!-- Version 3: Premium mit YouTube -->
+    <div class="card">
+      <h2><i class="fas fa-video"></i> Premium Version</h2>
+      <div class="emoji">🎬</div>
+      <p>Premium-Version mit YouTube-Integration, Detail-Modals, Sortieroptionen und professionellem Design.</p>
+      <ul class="features">
+        <li>YouTube-Videos</li>
+        <li>Detail-Modals</li>
+        <li>Mehrere Sortieroptionen</li>
+        <li>Responsive Design</li>
+        <li>Detaillierte Statistiken</li>
+        <li>CSV mit YouTube-Links</li>
+      </ul>
+      <div class="button-group">
+        <a href="rosins_restaurants_karte_v2.html" class="button">
+          <i class="fas fa-globe"></i> Öffnen
+        </a>
       </div>
     </div>
-    <div class="info-item">
-      <i class="fas fa-check-circle"></i>
-      <div>
-        <strong>Status:</strong><br><span class="status-badge status-${r.status}">${r.status.toUpperCase()}</span>
+ 
+    <!-- Downloads -->
+    <div class="card">
+      <h2><i class="fas fa-download"></i> Downloads</h2>
+      <div class="emoji">💾</div>
+      <p>Lade die Original-Daten als CSV-Datei herunter. Perfekt für Excel, Google Sheets oder eigene Projekte.</p>
+      <ul class="features">
+        <li>190 Restaurants</li>
+        <li>CSV-Format</li>
+        <li>Name, Stadt, Staffel</li>
+        <li>Episode, Status</li>
+        <li>Koordinaten (Lat/Lng)</li>
+        <li>UTF-8 codiert</li>
+      </ul>
+      <div class="button-group">
+        <a href="rosins-restaurants-original.csv" class="button" download>
+          <i class="fas fa-file-csv"></i> CSV Download
+        </a>
       </div>
     </div>
-    <div class="info-item">
-      <i class="fas fa-tv"></i>
-      <div>
-        <strong>Folge:</strong><br>${r.episode}
+  </div>
+ 
+  <div class="info-section">
+    <h2>📊 Über die Daten</h2>
+    <p>
+      Diese Sammlung enthält <strong>alle 190 Restaurants</strong> aus <strong>Frank Rosins beliebter TV-Show "Rosins Restaurants"</strong> über 
+      alle 19 ausgestrahlten Staffeln. Jedes Restaurant wird mit echten Koordinaten, Status (offen/geschlossen), 
+      Staffel- und Episodennummern aufgelistet.
+    </p>
+    
+    <h3 style="color: var(--primary); margin-top: 25px; margin-bottom: 15px;">📈 Datenquellen</h3>
+    <p>Die Daten stammen aus:</p>
+    <ul style="margin-left: 20px; color: #555;">
+      <li>Kompletter Datensatz mit echten Restaurants (190 Einträge)</li>
+      <li>Genaue GPS-Koordinaten für alle Standorte</li>
+      <li>Aktueller Status (Offen/Geschlossen) nach Datenstand</li>
+      <li>Staffel- und Episodennummern zur Referenzierung</li>
+    </ul>
+ 
+    <h3 style="color: var(--primary); margin-top: 25px; margin-bottom: 15px;">🎯 Nutzungsmöglichkeiten</h3>
+    <ul style="margin-left: 20px; color: #555;">
+      <li><strong>Restaurants besuchen:</strong> Nutze die interaktive Karte um Restaurants in deiner Nähe zu finden</li>
+      <li><strong>Statistiken:</strong> Analysiere Trends nach Staffel, Region oder Status</li>
+      <li><strong>Reiseplanung:</strong> Plane eine Tour durch alle Restaurants einer Staffel</li>
+      <li><strong>Datenexport:</strong> Lade die CSV-Datei für eigene Projekte herunter</li>
+      <li><strong>Recherche:</strong> Finde spezifische Restaurants und ihre Episoden</li>
+    </ul>
+ 
+    <h3 style="color: var(--primary); margin-top: 25px; margin-bottom: 15px;">🚀 Features der Karten</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
+      <div class="highlight">
+        <strong>🔍 Intelligente Suche</strong><br>
+        Suche nach Restaurant-Name oder Stadt in Echtzeit
+      </div>
+      <div class="highlight">
+        <strong>🗺️ Interaktive Karte</strong><br>
+        OpenStreetMap mit Zoom, Pan und Popups
+      </div>
+      <div class="highlight">
+        <strong>📊 Statistiken</strong><br>
+        Echtzeit-Statistiken zu gefilterten Ergebnissen
+      </div>
+      <div class="highlight">
+        <strong>📱 Responsive Design</strong><br>
+        Funktioniert auf Desktop, Tablet und Mobile
+      </div>
+      <div class="highlight">
+        <strong>🌓 Dark Mode</strong><br>
+        Augen-freundlicher Dark Mode für Nachts
+      </div>
+      <div class="highlight">
+        <strong>💾 CSV-Export</strong><br>
+        Exportiere gefilterte Daten als CSV
       </div>
     </div>
-  `;
-
-  if (r.website) {
-    details += `
-      <div class="info-item">
-        <i class="fas fa-globe"></i>
-        <div>
-          <strong>Website:</strong><br><a href="https://${r.website}" target="_blank">${r.website}</a>
-        </div>
-      </div>
-    `;
-  }
-
-  details += `
-    <div class="info-item">
-      <i class="fab fa-youtube"></i>
-      <div>
-        <strong>YouTube-Videos:</strong><br><a href="${r.youtube}" target="_blank">Zum Video</a>
-      </div>
-    </div>
-    <div class="info-item">
-      <i class="fas fa-map"></i>
-      <div>
-        <strong>Koordinaten:</strong><br>${r.lat.toFixed(3)}, ${r.lng.toFixed(3)}
-      </div>
-    </div>
-    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-      <a href="https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}" target="_blank" class="action-btn" style="flex: 1; text-decoration: none; text-align: center;">
-        🗺️ In Maps öffnen
-      </a>
-      <a href="${r.youtube}" target="_blank" class="action-btn" style="flex: 1; text-decoration: none; text-align: center; background: #c4302b;">
-        ▶️ YouTube ansehen
-      </a>
-    </div>
-  `;
-
-  document.getElementById("modalDetails").innerHTML = details;
-  detailModal.classList.add("show");
-}
-
-function closeModal() {
-  detailModal.classList.remove("show");
-}
-
-function exportCSV() {
-  const filtered = getFiltered();
-  let csv = "Restaurant,Stadt,Kategorie,Bewertung,Status,Folge,Website,YouTube-Link\n";
-  
-  filtered.forEach(r => {
-    csv += `"${r.name}","${r.city}","${r.category}",${r.rating},"${r.status}","${r.episode}","${r.website}","${r.youtube}"\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "rosins-restaurants.csv";
-  link.click();
-}
-
-// Event Listener
-document.getElementById("search").addEventListener("input", update);
-document.getElementById("filterStatus").addEventListener("change", update);
-document.getElementById("filterCategory").addEventListener("change", update);
-document.getElementById("exportBtn").addEventListener("click", exportCSV);
-
-document.querySelectorAll(".sort-btn").forEach(btn => {
-  btn.addEventListener("click", (e) => {
-    document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
-    e.target.classList.add("active");
-    currentSort = e.target.dataset.sort;
-    update();
-  });
-});
-
-document.getElementById("darkToggle").addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  localStorage.setItem("darkMode", document.body.classList.contains("dark-mode"));
-});
-
-detailModal.addEventListener("click", (e) => {
-  if (e.target === detailModal) closeModal();
-});
-
-// Dark Mode aus LocalStorage laden
-if (localStorage.getItem("darkMode") === "true") {
-  document.body.classList.add("dark-mode");
-}
-
-// Initialisieren
-initMap();
-update();
-</script>
+  </div>
+ 
+  <div class="info-section">
+    <h2>🎬 Über Rosins Restaurants</h2>
+    <p>
+      "Rosins Restaurants" ist eine deutsche Fernseh-Show mit dem Restaurantkritiker und Restaurantberater 
+      <strong>Frank Rosin</strong>. In der Show besucht er Restaurants in Deutschland, Österreich und der Schweiz, 
+      um sie zu analysieren und zu verbessern. Mit konstruktiver Kritik und praktischen Tipps hilft er 
+      den Betreibern, ihre Restaurants erfolgreich zu machen.
+    </p>
+    <p style="margin-top: 15px;">
+      Diese interaktive Datensammlung hilft Fans der Show, alle besuchten Restaurants zu entdecken, 
+      zu besuchen und mehr über ihre aktuelle Situation zu erfahren.
+    </p>
+  </div>
+ 
+  <div class="footer">
+    <p>🍽️ Rosins Restaurants - Datenübersicht</p>
+    <p style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
+      Erstellt für Fans der Show • Daten aus öffentlich verfügbaren Quellen • Keine offizielle Verbindung zur Show
+    </p>
+  </div>
+ 
+</div>
+ 
 </body>
 </html>

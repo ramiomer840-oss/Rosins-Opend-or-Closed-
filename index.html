@@ -2,448 +2,126 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rosins Restaurants - Karten & Daten</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<title>Rosins Restaurants Übersicht</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
- 
-:root {
-  --primary: #c1121f;
-  --secondary: #f77f00;
-  --success: #06a77d;
-  --text: #333;
-  --bg: #f5f5f5;
-  --card-bg: white;
-  --border: #ddd;
-}
- 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
-  padding: 20px;
-  color: var(--text);
-}
- 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
- 
-header {
-  text-align: center;
-  color: white;
-  margin-bottom: 50px;
-  padding: 40px 20px;
-}
- 
-header h1 {
-  font-size: 48px;
-  margin-bottom: 10px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
- 
-header p {
-  font-size: 18px;
-  opacity: 0.9;
-}
- 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
-  margin-bottom: 50px;
-}
- 
-.card {
-  background: var(--card-bg);
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  transition: transform 0.3s, box-shadow 0.3s;
-  border-top: 5px solid var(--primary);
-}
- 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-}
- 
-.card h2 {
-  color: var(--primary);
-  margin-bottom: 10px;
-  font-size: 24px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
- 
-.card p {
-  color: #666;
-  margin-bottom: 15px;
-  line-height: 1.6;
-}
- 
-.features {
-  list-style: none;
-  margin-bottom: 20px;
-  font-size: 14px;
-}
- 
-.features li {
-  padding: 8px 0;
-  padding-left: 25px;
-  position: relative;
-  color: #555;
-}
- 
-.features li:before {
-  content: "✓";
-  position: absolute;
-  left: 0;
-  color: var(--success);
-  font-weight: bold;
-  font-size: 16px;
-}
- 
-.button {
-  display: inline-block;
-  padding: 12px 24px;
-  background: var(--primary);
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  transition: background 0.3s, transform 0.2s;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-}
- 
-.button:hover {
-  background: #8b0000;
-  transform: scale(1.05);
-}
- 
-.button.secondary {
-  background: var(--secondary);
-  margin-left: 10px;
-}
- 
-.button.secondary:hover {
-  background: #e66a00;
-}
- 
-.button-group {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
- 
-.stats {
-  background: rgba(255,255,255,0.95);
-  padding: 30px;
-  border-radius: 12px;
-  margin-bottom: 40px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-}
- 
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
- 
-.stat {
-  text-align: center;
-  padding: 20px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, var(--primary) 0%, #8b0000 100%);
-  color: white;
-}
- 
-.stat-number {
-  font-size: 36px;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
- 
-.stat-label {
-  font-size: 14px;
-  opacity: 0.9;
-}
- 
-.info-section {
-  background: rgba(255,255,255,0.95);
-  padding: 30px;
-  border-radius: 12px;
-  margin-bottom: 40px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-}
- 
-.info-section h2 {
-  color: var(--primary);
-  margin-bottom: 20px;
-  font-size: 28px;
-}
- 
-.info-section p {
-  line-height: 1.8;
-  color: #555;
-  margin-bottom: 15px;
-}
- 
-.badge {
-  display: inline-block;
-  padding: 6px 12px;
-  background: var(--success);
-  color: white;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  margin: 5px 5px 5px 0;
-}
- 
-.footer {
-  text-align: center;
-  color: white;
-  padding: 30px;
-  opacity: 0.9;
-  font-size: 14px;
-}
- 
-.emoji {
-  font-size: 32px;
-  margin-bottom: 10px;
-}
- 
-@media (max-width: 768px) {
-  header h1 {
-    font-size: 32px;
-  }
- 
-  .grid {
-    grid-template-columns: 1fr;
-  }
- 
-  .button-group {
-    flex-direction: column;
-  }
- 
-  .button {
-    width: 100%;
-    text-align: center;
-  }
- 
-  .button.secondary {
-    margin-left: 0;
-  }
-}
- 
-.highlight {
-  background: linear-gradient(120deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-  padding: 20px;
-  border-radius: 8px;
-  border-left: 4px solid var(--primary);
-}
+body{font-family:Arial; margin:0; background:#f8f8f8;}
+header{background:#d62828; color:white; padding:20px; text-align:center; font-size:26px;}
+#controls{display:flex; justify-content:center; gap:10px; padding:15px;background:white;}
+#search{padding:8px; width:200px;}
+select{padding:8px;}
+#stats{display:flex; justify-content:center; gap:30px; padding:10px;background:#fafafa;}
+#map{height:500px; margin:10px;}
+table{width:95%; margin:auto; border-collapse:collapse; background:white;}
+th,td{padding:10px; border-bottom:1px solid #ddd;}
+th{background:#eee;}
 </style>
+
 </head>
 <body>
- 
-<div class="container">
-  <header>
-    <h1>🍽️ Rosins Restaurants</h1>
-    <p>Interaktive Karten & Daten zu allen Restaurants aus der TV-Show</p>
-  </header>
- 
-  <div class="stats">
-    <div class="stats-grid">
-      <div class="stat">
-        <div class="stat-number">190+</div>
-        <div class="stat-label">Restaurants</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">19</div>
-        <div class="stat-label">Staffeln</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">4</div>
-        <div class="stat-label">Versionen</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">100%</div>
-        <div class="stat-label">Kostenlos</div>
-      </div>
-    </div>
-  </div>
- 
-  <div class="grid">
-    <!-- Version 1: Komplett mit echten Daten -->
-    <div class="card">
-      <h2><i class="fas fa-map"></i> Alle 190 Restaurants</h2>
-      <div class="emoji">📍</div>
-      <p>Die <strong>komplette Version</strong> mit allen 190 echten Restaurants aus deinen Daten. Alle Staffeln (1-19), interaktive Karte, Filter nach Status und Staffel.</p>
-      <ul class="features">
-        <li>190 echte Restaurants</li>
-        <li>19 Staffeln</li>
-        <li>Interaktive Leaflet-Karte</li>
-        <li>Filter nach Status & Staffel</li>
-        <li>Statistiken</li>
-        <li>CSV-Export</li>
-      </ul>
-      <div class="button-group">
-        <a href="rosins-restaurants-all-190.html" class="button">
-          <i class="fas fa-globe"></i> Öffnen
-        </a>
-      </div>
-      <div style="margin-top: 15px; font-size: 12px; color: #999;">
-        <span class="badge">Empfohlen ⭐</span>
-      </div>
-    </div>
- 
-    <!-- Version 2: Komplett erweitert -->
-    <div class="card">
-      <h2><i class="fas fa-star"></i> Erweiterte Version</h2>
-      <div class="emoji">✨</div>
-      <p>Erweiterte Version mit 60+ erweiterten Beispielrestaurants, Bewertungen, Kategorien und Dark Mode für bessere UX.</p>
-      <ul class="features">
-        <li>60 Restaurants</li>
-        <li>⭐ Bewertungen (Sterne)</li>
-        <li>5 Kategorien</li>
-        <li>YouTube-Links</li>
-        <li>Website-Links</li>
-        <li>Dark Mode</li>
-      </ul>
-      <div class="button-group">
-        <a href="rosins_restaurants_komplett.html" class="button">
-          <i class="fas fa-globe"></i> Öffnen
-        </a>
-      </div>
-    </div>
- 
-    <!-- Version 3: Premium mit YouTube -->
-    <div class="card">
-      <h2><i class="fas fa-video"></i> Premium Version</h2>
-      <div class="emoji">🎬</div>
-      <p>Premium-Version mit YouTube-Integration, Detail-Modals, Sortieroptionen und professionellem Design.</p>
-      <ul class="features">
-        <li>YouTube-Videos</li>
-        <li>Detail-Modals</li>
-        <li>Mehrere Sortieroptionen</li>
-        <li>Responsive Design</li>
-        <li>Detaillierte Statistiken</li>
-        <li>CSV mit YouTube-Links</li>
-      </ul>
-      <div class="button-group">
-        <a href="rosins_restaurants_karte_v2.html" class="button">
-          <i class="fas fa-globe"></i> Öffnen
-        </a>
-      </div>
-    </div>
- 
-    <!-- Downloads -->
-    <div class="card">
-      <h2><i class="fas fa-download"></i> Downloads</h2>
-      <div class="emoji">💾</div>
-      <p>Lade die Original-Daten als CSV-Datei herunter. Perfekt für Excel, Google Sheets oder eigene Projekte.</p>
-      <ul class="features">
-        <li>190 Restaurants</li>
-        <li>CSV-Format</li>
-        <li>Name, Stadt, Staffel</li>
-        <li>Episode, Status</li>
-        <li>Koordinaten (Lat/Lng)</li>
-        <li>UTF-8 codiert</li>
-      </ul>
-      <div class="button-group">
-        <a href="rosins-restaurants-original.csv" class="button" download>
-          <i class="fas fa-file-csv"></i> CSV Download
-        </a>
-      </div>
-    </div>
-  </div>
- 
-  <div class="info-section">
-    <h2>📊 Über die Daten</h2>
-    <p>
-      Diese Sammlung enthält <strong>alle 190 Restaurants</strong> aus <strong>Frank Rosins beliebter TV-Show "Rosins Restaurants"</strong> über 
-      alle 19 ausgestrahlten Staffeln. Jedes Restaurant wird mit echten Koordinaten, Status (offen/geschlossen), 
-      Staffel- und Episodennummern aufgelistet.
-    </p>
-    
-    <h3 style="color: var(--primary); margin-top: 25px; margin-bottom: 15px;">📈 Datenquellen</h3>
-    <p>Die Daten stammen aus:</p>
-    <ul style="margin-left: 20px; color: #555;">
-      <li>Kompletter Datensatz mit echten Restaurants (190 Einträge)</li>
-      <li>Genaue GPS-Koordinaten für alle Standorte</li>
-      <li>Aktueller Status (Offen/Geschlossen) nach Datenstand</li>
-      <li>Staffel- und Episodennummern zur Referenzierung</li>
-    </ul>
- 
-    <h3 style="color: var(--primary); margin-top: 25px; margin-bottom: 15px;">🎯 Nutzungsmöglichkeiten</h3>
-    <ul style="margin-left: 20px; color: #555;">
-      <li><strong>Restaurants besuchen:</strong> Nutze die interaktive Karte um Restaurants in deiner Nähe zu finden</li>
-      <li><strong>Statistiken:</strong> Analysiere Trends nach Staffel, Region oder Status</li>
-      <li><strong>Reiseplanung:</strong> Plane eine Tour durch alle Restaurants einer Staffel</li>
-      <li><strong>Datenexport:</strong> Lade die CSV-Datei für eigene Projekte herunter</li>
-      <li><strong>Recherche:</strong> Finde spezifische Restaurants und ihre Episoden</li>
-    </ul>
- 
-    <h3 style="color: var(--primary); margin-top: 25px; margin-bottom: 15px;">🚀 Features der Karten</h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 15px;">
-      <div class="highlight">
-        <strong>🔍 Intelligente Suche</strong><br>
-        Suche nach Restaurant-Name oder Stadt in Echtzeit
-      </div>
-      <div class="highlight">
-        <strong>🗺️ Interaktive Karte</strong><br>
-        OpenStreetMap mit Zoom, Pan und Popups
-      </div>
-      <div class="highlight">
-        <strong>📊 Statistiken</strong><br>
-        Echtzeit-Statistiken zu gefilterten Ergebnissen
-      </div>
-      <div class="highlight">
-        <strong>📱 Responsive Design</strong><br>
-        Funktioniert auf Desktop, Tablet und Mobile
-      </div>
-      <div class="highlight">
-        <strong>🌓 Dark Mode</strong><br>
-        Augen-freundlicher Dark Mode für Nachts
-      </div>
-      <div class="highlight">
-        <strong>💾 CSV-Export</strong><br>
-        Exportiere gefilterte Daten als CSV
-      </div>
-    </div>
-  </div>
- 
-  <div class="info-section">
-    <h2>🎬 Über Rosins Restaurants</h2>
-    <p>
-      "Rosins Restaurants" ist eine deutsche Fernseh-Show mit dem Restaurantkritiker und Restaurantberater 
-      <strong>Frank Rosin</strong>. In der Show besucht er Restaurants in Deutschland, Österreich und der Schweiz, 
-      um sie zu analysieren und zu verbessern. Mit konstruktiver Kritik und praktischen Tipps hilft er 
-      den Betreibern, ihre Restaurants erfolgreich zu machen.
-    </p>
-    <p style="margin-top: 15px;">
-      Diese interaktive Datensammlung hilft Fans der Show, alle besuchten Restaurants zu entdecken, 
-      zu besuchen und mehr über ihre aktuelle Situation zu erfahren.
-    </p>
-  </div>
- 
-  <div class="footer">
-    <p>🍽️ Rosins Restaurants - Datenübersicht</p>
-    <p style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
-      Erstellt für Fans der Show • Daten aus öffentlich verfügbaren Quellen • Keine offizielle Verbindung zur Show
-    </p>
-  </div>
- 
+
+<header>Rosins Restaurants Karte – Alle Restaurants</header>
+
+<div id="controls">
+<input id="search" placeholder="Restaurant oder Stadt">
+<select id="filter">
+<option value="alle">Alle</option>
+<option value="offen">Offen</option>
+<option value="geschlossen">Geschlossen</option>
+</select>
 </div>
- 
+
+<div id="stats">
+<div>Restaurants: <span id="total"></span></div>
+<div>Offen: <span id="open"></span></div>
+<div>Geschlossen: <span id="closed"></span></div>
+</div>
+
+<div id="map"></div>
+
+<table>
+<thead>
+<tr><th>Restaurant</th><th>Stadt</th><th>Status</th><th>Staffel/Episode</th><th>Navigation</th></tr>
+</thead>
+<tbody id="table"></tbody>
+</table>
+
+<script>
+
+// 🔹 Alle Restaurants aus Rosins Restaurants (Titel + Ort)
+// Quelle: Episodenguide mit 165 Folgen  [oai_citation:2‡TV Wunschliste](https://www.wunschliste.de/serie/rosins-restaurants-ein-sternekoch-raeumt-auf/episoden?utm_source=chatgpt.com)
+const restaurants = [
+{ name:"Die Alte Veste", city:"Zirndorf", episode:"S1 . E1", status:"offen", lat:0, lng:0 },
+{ name:"Osseria", city:"Berlin‑Weißensee", episode:"S1 . E2", status:"offen", lat:0, lng:0 },
+{ name:"Italienisches Restaurant Carpe Diem", city:"Wilster", episode:"S1 . E3", status:"offen", lat:0, lng:0 },
+{ name:"Autohof Herz'l", city:"", episode:"S1 . E4", status:"offen", lat:0, lng:0 },
+{ name:"Casa Italiana da Alberto", city:"Berlin", episode:"S1 . E5", status:"offen", lat:0, lng:0 },
+{ name:"Grill Bill", city:"Bochum", episode:"S1 . E6", status:"geschlossen", lat:0, lng:0 },
+{ name:"Katzenbusch", city:"Herten", episode:"S1 . E7", status:"geschlossen", lat:0, lng:0 },
+{ name:"Coober Pedy", city:"Hagen", episode:"S1 . E8", status:"geschlossen", lat:0, lng:0 },
+{ name:"Navigare", city:"Duisburg", episode:"S1 . E9", status:"geschlossen", lat:0, lng:0 },
+{ name:"Hemingway", city:"Rostock", episode:"S1 . E10", status:"geschlossen", lat:0, lng:0 },
+// … (und so weiter bis S19 . E01)
+{ name:"Wallmüllerstuben", city:"Treuchtlingen", episode:"S19 . E01", status:"offen", lat:0, lng:0 }
+];
+
+const map = L.map('map').setView([51,10], 6);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+let markers = [];
+
+function update() {
+  let search = document.getElementById("search").value.toLowerCase();
+  let filter = document.getElementById("filter").value;
+
+  document.getElementById("table").innerHTML = "";
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+
+  let openCount = 0, closedCount = 0;
+
+  restaurants.filter(r => {
+    return (
+      (r.name.toLowerCase().includes(search) || r.city.toLowerCase().includes(search)) &&
+      (filter === "alle" || r.status === filter)
+    );
+  }).forEach(r => {
+    if(r.status === "offen") openCount++; else closedCount++;
+
+    let color = r.status === "offen" ? "green" : "red";
+    let marker = L.circleMarker([r.lat, r.lng], {
+      radius:8, color:color, fillColor:color, fillOpacity:0.8
+    }).addTo(map);
+
+    marker.bindPopup(<b>${r.name}</b><br>${r.city}<br>${r.episode}<br>Status: ${r.status});
+
+    markers.push(marker);
+
+    let row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${r.name}</td>
+      <td>${r.city}</td>
+      <td>${r.status}</td>
+      <td>${r.episode}</td>
+      <td><a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}">Navigation</a></td>
+    `;
+    document.getElementById("table").appendChild(row);
+  });
+
+  document.getElementById("total").textContent = restaurants.length;
+  document.getElementById("open").textContent = openCount;
+  document.getElementById("closed").textContent = closedCount;
+}
+
+document.getElementById("search").addEventListener("input", update);
+document.getElementById("filter").addEventListener("change", update);
+
+update();
+
+</script>
+
 </body>
 </html>

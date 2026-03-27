@@ -1,0 +1,191 @@
+name,city,season,episode,status,latitude,longitude
+Alte Veste,Zirndorf,1,1,closed,49.4430,10.9590
+Akropolis,Moers,1,2,closed,51.4516,6.6326
+Speisekammer,Hattingen,1,3,open,51.3985,7.1868
+Mahlzeit,Dortmund,1,4,closed,51.5136,7.4653
+La Vita,Essen,1,5,closed,51.4556,7.0116
+Palast der Winde,Oberhausen,1,6,closed,51.4963,6.8638
+Zum Schwan,Wesel,1,7,open,51.6644,6.6204
+Schlemmerstube,Gelsenkirchen,1,8,closed,51.5177,7.0857
+Casa Iberica,Duisburg,1,9,closed,51.4344,6.7623
+Zum Anker,Dinslaken,1,10,open,51.5623,6.7434
+Ratskeller,Wülfrath,2,1,closed,51.2814,7.0391
+Alpengasthof,Weißbach,2,2,open,47.6500,12.7167
+Amtslinde,Osterholz-Scharmbeck,2,3,closed,53.2264,8.7973
+Zum Stern,Walldorf,2,4,open,49.3064,8.6436
+La Gondola,Berlin,2,5,closed,52.5200,13.4050
+Rhodos,Bremen,2,6,closed,53.0793,8.8017
+Pier 13,Rostock,2,7,open,54.0924,12.0991
+Zur Linde,Greven,2,8,closed,52.0934,7.6082
+Hafenblick,Kiel,2,9,open,54.3233,10.1228
+Zum Goldenen Hirsch,Würzburg,2,10,closed,49.7913,9.9534
+Carpe Diem,Wilster,3,1,closed,53.9228,9.3808
+El Greco,München,3,2,closed,48.1351,11.5820
+Restaurant am Markt,Dorsten,3,3,closed,51.6617,6.9651
+Waldesruh,Bochum,3,4,closed,51.4818,7.2162
+Zur Post,Bad Salzuflen,3,5,open,52.0862,8.7443
+Pane e Vino,Krefeld,3,6,closed,51.3388,6.5853
+Poseidon,Hannover,3,7,open,52.3759,9.7320
+Zum Alten Bahnhof,Leipzig,3,8,closed,51.3397,12.3731
+Taverna Hellas,Frankfurt am Main,3,9,open,50.1109,8.6821
+Stadtkrone,Düsseldorf,3,10,closed,51.2277,6.7735
+Landlust,Oldenburg,4,1,open,53.1435,8.2146
+Altstadtlokal,Regensburg,4,2,closed,49.0134,12.1016
+Laguna,Stuttgart,4,3,closed,48.7758,9.1829
+La Trattoria,Saarbrücken,4,4,closed,49.2402,6.9969
+Zum Fischer,Berlin,4,5,closed,52.5200,13.4050
+Steakhouse Texas,Hamburg,4,6,open,53.5511,9.9937
+Toscana,Bonn,4,7,closed,50.7374,7.0982
+Dorfkrug,Lübeck,4,8,open,53.8655,10.6866
+Zum Ochsen,Freiburg im Breisgau,4,9,open,47.9990,7.8421
+Asia Wok,Nürnberg,4,10,closed,49.4521,11.0767
+Gasthof zur Mühle,Passau,5,1,open,48.5667,13.4319
+Ristorante Bella Italia,Köln,5,2,closed,50.9375,6.9603
+Poseidon II,Dortmund,5,3,closed,51.5136,7.4653
+Altdeutsche Stube,Münster,5,4,open,51.9607,7.6261
+Zum Seeblick,Konstanz,5,5,open,47.6779,9.1732
+Rheinblick,Koblenz,5,6,closed,50.3569,7.5880
+Schwanenhof,Heidelberg,5,7,open,49.3988,8.6724
+Zum alten Ritter,Kassel,5,8,closed,51.3127,9.4797
+Asia Garden,Bielefeld,5,9,closed,52.0302,8.5325
+Bergblick,Garmisch-Partenkirchen,5,10,open,47.4917,11.0955
+Seeterrasse,Schwerin,6,1,open,53.6294,11.4148
+Hafenstübchen,Emden,6,2,open,53.3675,7.2078
+El Mariachi,Mainz,6,3,closed,50.0012,8.2763
+Trattoria Roma,Augsburg,6,4,closed,48.3705,10.8978
+Zum Dorfkrug,Lüneburg,6,5,open,53.2464,10.4133
+Athena,Berlin,6,6,closed,52.5200,13.4050
+Kupferkanne,Paderborn,6,7,open,51.7189,8.7575
+Zur Krone,Trier,6,8,open,49.7499,6.6371
+Waldschänke,Erfurt,6,9,open,50.9770,11.0280
+Zur Schmiede,Jena,6,10,closed,50.9271,11.5892
+Zum Leuchtturm,Flensburg,7,1,open,54.7937,9.4460
+Goldene Gans,Hildesheim,7,2,closed,52.1508,9.9511
+Taverne Kreta,Chemnitz,7,3,closed,50.8278,12.9214
+Stadtgarten,Offenbach am Main,7,4,closed,50.0950,8.7761
+Schlemmer Eck,Wiesbaden,7,5,open,50.0782,8.2398
+Altes Rathaus,Heilbronn,7,6,open,49.1427,9.2109
+Bergschlößchen,Wuppertal,7,7,closed,51.2562,7.1508
+Zum Pfannkuchen,Magdeburg,7,8,closed,52.1205,11.6276
+La Provence,Saarlouis,7,9,open,49.3140,6.7516
+Gasthaus am See,Stralsund,7,10,open,54.3090,13.0810
+Zur Fähre,Cuxhaven,8,1,open,53.8621,8.6947
+Ratsstube,Osnabrück,8,2,open,52.2799,8.0472
+Maharaja,Hagen,8,3,closed,51.3671,7.4633
+Pizzeria Napoli,Recklinghausen,8,4,closed,51.6141,7.1970
+Zum Jägerhof,Siegen,8,5,open,50.8748,8.0243
+La Strada,Moers,8,6,closed,51.4516,6.6326
+Fischmarkt,Lünen,8,7,open,51.6164,7.5287
+Waldhaus,Krefeld,8,8,open,51.3388,6.5853
+Balkan Grill,Herne,8,9,closed,51.5380,7.2257
+Café Central,Essen,8,10,closed,51.4556,7.0116
+Zum Wirt,Ingolstadt,9,1,open,48.7651,11.4237
+Hansi's Stube,Rosenheim,9,2,open,47.8564,12.1224
+Trattoria Milano,Mönchengladbach,9,3,closed,51.1805,6.4428
+Alte Schmiede,Braunschweig,9,4,open,52.2689,10.5268
+Café am Dom,Speyer,9,5,open,49.3173,8.4412
+Taverna Santorini,Kiel,9,6,closed,54.3233,10.1228
+Ristorante Venezia,Karlsruhe,9,7,closed,49.0069,8.4037
+Zur Brücke,Göttingen,9,8,open,51.5413,9.9158
+Waldgaststätte,Erlangen,9,9,open,49.5897,11.0119
+Felsenkeller,Halle (Saale),9,10,closed,51.4828,11.9695
+Hafenhaus,Bremerhaven,10,1,open,53.5396,8.5809
+Schlemmerhafen,Kiel,10,2,open,54.3233,10.1228
+Café König,Weimar,10,3,open,50.9795,11.3235
+Brauhaus,Bocholt,10,4,open,51.8388,6.6153
+Zum Schützenhof,Ludwigshafen am Rhein,10,5,closed,49.4774,8.4452
+La Cucina,Hamm,10,6,closed,51.6739,7.8150
+Altstadt Café,Dresden,10,7,open,51.0504,13.7373
+Zum Ankerplatz,Rostock,10,8,open,54.0924,12.0991
+Alte Mühle,Kiel,10,9,open,54.3233,10.1228
+Taverna Mykonos,Oldenburg,10,10,open,53.1435,8.2146
+Zum Rathaus,Delmenhorst,11,1,open,53.0511,8.6309
+Pizzeria Roma,Vechta,11,2,open,52.7280,8.2860
+Landgasthof Sonne,Cloppenburg,11,3,open,52.8469,8.0430
+Taverne Olympia,Lingen (Ems),11,4,open,52.5215,7.3185
+Café am Markt,Nordenham,11,5,open,53.4862,8.4805
+Seewirt,Bad Zwischenahn,11,6,open,53.1835,8.0014
+Alt Varel,Varel,11,7,open,53.3969,8.1362
+Strandhaus,Norderney,11,8,open,53.7073,7.1580
+Hafenblick II,Leer (Ostfriesland),11,9,open,53.2310,7.4610
+Gasthof Krone,Aurich,11,10,open,53.4692,7.4823
+La Piazza,Husum,12,1,open,54.4858,9.0520
+Fjordblick,Schleswig,12,2,open,54.5212,9.5680
+Nordsee Grill,Itzehoe,12,3,open,53.9210,9.5153
+Stadtcafé,Elmshorn,12,4,open,53.7543,9.6536
+Moin Moin,Neumünster,12,5,open,54.0748,9.9810
+Deichhaus,Brunsbüttel,12,6,open,53.8964,9.1405
+Hafenperle,Wilhelmshaven,12,7,open,53.5296,8.1120
+Strandperle,Wangerooge,12,8,open,53.7928,7.9014
+Alte Werft,Papenburg,12,9,open,53.0778,7.4044
+Binnenhafen,Emden,12,10,open,53.3675,7.2078
+Gasthof Adler,Ulm,13,1,open,48.4011,9.9876
+Neckarblick,Tübingen,13,2,open,48.5216,9.0576
+Bären,Waldshut-Tiengen,13,3,open,47.6233,8.2170
+Schwarzwaldstube,Villingen-Schwenningen,13,4,open,48.0640,8.4930
+Bodenseeblick,Friedrichshafen,13,5,open,47.6510,9.4797
+Alpenblick,Lindau (Bodensee),13,6,open,47.5480,9.6840
+Isarstüberl,Landshut,13,7,open,48.5442,12.1469
+Donauperle,Deggendorf,13,8,open,48.8400,12.9600
+Stadtstube,Regensburg,13,9,open,49.0134,12.1016
+Bayernstube,Rosenheim,13,10,open,47.8564,12.1224
+Elbterrassen,Dessau-Roßlau,14,1,open,51.8345,12.2424
+Saaleperle,Naumburg (Saale),14,2,open,51.1512,11.8098
+Muldeblick,Zwickau,14,3,open,50.7189,12.4934
+Westsachsenstube,Plauen,14,4,open,50.4973,12.1377
+Elbschänke,Meißen,14,5,open,51.1635,13.4737
+Spreeblick,Cottbus,14,6,open,51.7563,14.3329
+Oderblick,Frankfurt (Oder),14,7,open,52.3471,14.5506
+Havelstube,Brandenburg an der Havel,14,8,open,52.4125,12.5316
+Uckermarkhof,Templin,14,9,open,53.1184,13.5024
+Seenplatte,Waren (Müritz),14,10,open,53.5204,12.6798
+Rheinperle,Neuss,15,1,open,51.2042,6.6879
+Altstadt Grill,Köln,15,2,open,50.9375,6.9603
+Pizzeria Italia,Düsseldorf,15,3,open,51.2277,6.7735
+Ruhrtalstube,Mülheim an der Ruhr,15,4,open,51.4325,6.8828
+Emscherblick,Oberhausen,15,5,open,51.4963,6.8638
+Lippetal,Hamm,15,6,open,51.6739,7.8150
+Hellwegstube,Unna,15,7,open,51.5370,7.6897
+Sauerlandblick,Iserlohn,15,8,open,51.3755,7.7028
+Wupperterrasse,Solingen,15,9,open,51.1652,7.0671
+Bergische Stube,Remscheid,15,10,open,51.1787,7.1897
+Moselblick,Bernkastel-Kues,16,1,open,49.9167,7.0667
+Ahrterrasse,Bad Neuenahr-Ahrweiler,16,2,open,50.5435,7.1113
+Pfalzstube,Neustadt an der Weinstraße,16,3,open,49.3510,8.1386
+Weinstube,Rüdesheim am Rhein,16,4,open,49.9800,7.9240
+Mainterrasse,Aschaffenburg,16,5,open,49.9770,9.1520
+Spessartstube,Lohr am Main,16,6,open,49.9890,9.5760
+Taunusblick,Bad Homburg vor der Höhe,16,7,open,50.2268,8.6182
+Lahnperle,Weilburg,16,8,open,50.4854,8.2625
+Westerwaldblick,Montabaur,16,9,open,50.4356,7.8232
+Siegterrassen,Siegen,16,10,open,50.8748,8.0243
+Ostseestube,Binz,17,1,open,54.4000,13.6167
+Strandterrasse,Sellin,17,2,open,54.3770,13.6910
+Hafenblick III,Greifswald,17,3,open,54.0943,13.3747
+Backfischstube,Wismar,17,4,open,53.8930,11.4520
+Boddenblick,Barth,17,5,open,54.3630,12.7250
+Küstenhus,Ribnitz-Damgarten,17,6,open,54.2420,12.4470
+Seemannsklause,Warnemünde,17,7,open,54.1814,12.0855
+Strandcafé,Kühlungsborn,17,8,open,54.1528,11.7584
+Fischerhafen,Sassnitz,17,9,open,54.5144,13.6450
+Ostseeperle,Karlshagen,17,10,open,54.1167,13.8333
+Allgäustube,Kempten (Allgäu),18,1,open,47.7267,10.3139
+Berggasthof,Immenstadt im Allgäu,18,2,open,47.5592,10.2177
+Alpenhütte,Oberstdorf,18,3,open,47.4109,10.2793
+Schlossblick,Füssen,18,4,open,47.5714,10.7017
+Lechblick,Landsberg am Lech,18,5,open,48.0484,10.8828
+Isarblick,Bad Tölz,18,6,open,47.7611,11.5582
+Chiemseestube,Prien am Chiemsee,18,7,open,47.8558,12.3439
+Innterrassen,Rosenheim,18,8,open,47.8564,12.1224
+Salzachhaus,Laufen,18,9,open,47.9395,12.9367
+Grenzblick,Freilassing,18,10,open,47.8400,12.9800
+Harzblick,Goslar,19,1,open,51.9043,10.4277
+Brockenstube,Wernigerode,19,2,open,51.8365,10.7833
+Bodetalhaus,Thale,19,3,open,51.7485,11.0430
+Kyffhäuserblick,Bad Frankenhausen,19,4,open,51.3564,11.1019
+Heidestube,Lüneburg,19,5,open,53.2464,10.4133
+Wendlandhof,Lüchow,19,6,open,52.9670,11.1566
+Elbtalstube,Lauenburg/Elbe,19,7,open,53.3743,10.5567
+Weserblick,Höxter,19,8,open,51.7750,9.3811
+Teutostube,Detmold,19,9,open,51.9385,8.8810
+Porta-Blick,Porta Westfalica,19,10,open,52.2307,8.9196

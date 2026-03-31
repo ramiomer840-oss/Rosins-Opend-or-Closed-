@@ -1,90 +1,56 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Rosins Restaurants – Interaktive Karte</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosins Restaurants – Interaktive Karte</title>
 
-<!-- Leaflet -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
-<!-- MarkerCluster -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <style>
+        :root {
+            --rosin-red: #b71c1c;
+            --bg-gray: #f4f4f4;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg-gray); }
+        header { background: var(--rosin-red); color: white; padding: 25px; text-align: center; font-size: 24px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        
+        #controls { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 20px; background: white; border-bottom: 1px solid #ddd; }
+        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; min-width: 180px; }
+        
+        #map { height: 550px; margin: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 1px solid #ddd; }
+        
+        .container { max-width: 1200px; margin: auto; }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 50px; }
+        th, td { padding: 14px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f8f8f8; cursor: pointer; user-select: none; transition: background 0.2s; }
+        th:hover { background: #eee; }
+        tr:hover { background: #fffcf0; cursor: pointer; }
+        .highlight-row { background: #fff9c4 !important; }
+        
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; }
+        .status-offen { background: #2e7d32; }
+        .status-geschlossen { background: #c62828; }
 
-<!-- Fuzzy Search -->
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
-
-<style>
-body{
-    font-family:Arial, sans-serif;
-    margin:0;
-    background:#f4f4f4;
-}
-header{
-    background:#b71c1c;
-    color:white;
-    padding:20px;
-    text-align:center;
-    font-size:28px;
-    letter-spacing:1px;
-    box-shadow:0 2px 4px rgba(0,0,0,0.2);
-}
-#controls{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    justify-content:center;
-    padding:15px;
-    background:white;
-    border-bottom:1px solid #ddd;
-}
-input,select{
-    padding:8px 10px;
-    font-size:15px;
-}
-#map{
-    height:520px;
-    margin:10px;
-    border-radius:10px;
-    overflow:hidden;
-    box-shadow:0 2px 10px rgba(0,0,0,0.2);
-}
-table{
-    width:96%;
-    margin:20px auto;
-    border-collapse:collapse;
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,0.1);
-}
-th,td{
-    padding:10px;
-    border-bottom:1px solid #ddd;
-}
-th{
-    background:#eee;
-    cursor:pointer;
-}
-tr:hover{
-    background:#fafafa;
-}
-.highlight-row{
-    background:#ffeeba !important;
-}
-</style>
+        .route-btn { text-decoration: none; color: #1976d2; font-weight: bold; border: 1px solid #1976d2; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .route-btn:hover { background: #1976d2; color: white; }
+    </style>
 </head>
 <body>
 
-<header>Rosins Restaurants – Interaktive Karte</header>
+<header>Rosins Restaurants – Der interaktive Guide</header>
 
 <div id="controls">
-    <input id="search" placeholder="Restaurant, Stadt, Episode…" />
+    <input id="search" type="text" placeholder="Suche (Name, Stadt, Episode...)" />
     <select id="filter-status">
         <option value="alle">Alle Status</option>
         <option value="offen">Offen</option>
         <option value="geschlossen">Geschlossen</option>
-        <option value="unbekannt">Unbekannt</option>
     </select>
     <select id="filter-bundesland">
         <option value="alle">Alle Bundesländer</option>
@@ -96,136 +62,165 @@ tr:hover{
 
 <div id="map"></div>
 
-<table>
-    <thead>
-        <tr>
-            <th data-sort="name">Restaurant</th>
-            <th data-sort="city">Stadt</th>
-            <th data-sort="episode">Episode</th>
-            <th data-sort="status">Status</th>
-            <th>Navigation</th>
-        </tr>
-    </thead>
-    <tbody id="table"></tbody>
-</table>
+<div class="container">
+    <table id="restaurantTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable('name')">Restaurant ↕</th>
+                <th onclick="sortTable('city')">Stadt ↕</th>
+                <th onclick="sortTable('episode')">Episode ↕</th>
+                <th onclick="sortTable('status')">Status ↕</th>
+                <th>Navigation</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+</div>
 
 <script>
-const map = L.map("map").setView([51,10], 6);
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom:19}).addTo(map);
+    const map = L.map("map").setView([51.1657, 10.4515], 6);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
 
-let restaurants = [];
-let cluster = L.markerClusterGroup();
-map.addLayer(cluster);
+    let restaurants = [];
+    let currentSort = { key: '', asc: true };
+    const cluster = L.markerClusterGroup();
+    map.addLayer(cluster);
 
-function statusColor(s){
-    if(s==="offen") return "green";
-    if(s==="geschlossen") return "red";
-    return "gray";
-}
+    function getStatusBadge(s) {
+        return `<span class="badge status-${s}">${s.toUpperCase()}</span>`;
+    }
 
-function parseCSVLine(line) {
-    // Einfacher CSV-Parser, der Anführungszeichen ignoriert
-    return line.match(/(".*?"|[^",]+)(?=,|$)/g)?.map(e=>e.replace(/"/g,"").trim()) || [];
-}
+    function parseCSVLine(line) {
+        const regex = /(".*?"|[^",]+)(?=,|$)/g;
+        return line.match(regex)?.map(e => e.replace(/"/g, "").trim()) || [];
+    }
 
-function update(){
-    let search = document.getElementById("search").value;
-    let fStatus = document.getElementById("filter-status").value;
-    let fBL = document.getElementById("filter-bundesland").value;
-    let fStaffel = document.getElementById("filter-staffel").value;
+    function update() {
+        const searchVal = document.getElementById("search").value;
+        const fStatus = document.getElementById("filter-status").value;
+        const fBL = document.getElementById("filter-bundesland").value;
+        const fStaffel = document.getElementById("filter-staffel").value;
 
-    let fuse = new Fuse(restaurants, {
-        keys:["name","city","episode","state"],
-        threshold:0.3
-    });
+        let filtered = [...restaurants];
 
-    let list = search ? fuse.search(search).map(r=>r.item) : restaurants;
+        // Fuzzy Search
+        if (searchVal) {
+            const fuse = new Fuse(restaurants, { keys: ["name", "city", "episode", "state"], threshold: 0.3 });
+            filtered = fuse.search(searchVal).map(r => r.item);
+        }
 
-    list = list.filter(r=>
-        (fStatus==="alle" || r.status===fStatus) &&
-        (fBL==="alle" || r.state===fBL) &&
-        (fStaffel==="alle" || r.episode.startsWith("S"+fStaffel))
-    );
-
-    document.getElementById("table").innerHTML = "";
-    cluster.clearLayers();
-
-    list.forEach(r=>{
-        let marker = L.circleMarker([r.lat,r.lng], {
-            radius:8,
-            color:statusColor(r.status),
-            fillColor:statusColor(r.status),
-            fillOpacity:0.8
-        });
-
-        marker.bindPopup(
-            `<b>${r.name}</b><br>${r.city}<br>${r.episode}<br>Status: ${r.status}`
+        // Filter
+        filtered = filtered.filter(r => 
+            (fStatus === "alle" || r.status === fStatus) &&
+            (fBL === "alle" || r.state === fBL) &&
+            (fStaffel === "alle" || r.season === fStaffel)
         );
 
-        cluster.addLayer(marker);
+        renderUI(filtered);
+    }
 
-        let row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${r.name}</td>
-            <td>${r.city}</td>
-            <td>${r.episode}</td>
-            <td>${r.status}</td>
-            <td><a href="https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}" target="_blank">Route</a></td>
-        `;
+    function renderUI(data) {
+        document.getElementById("tableBody").innerHTML = "";
+        cluster.clearLayers();
 
-        row.addEventListener("click", ()=>{
-            map.setView([r.lat,r.lng], 14);
-            marker.openPopup();
-            document.querySelectorAll("tr").forEach(tr=>tr.classList.remove("highlight-row"));
-            row.classList.add("highlight-row");
+        data.forEach(r => {
+            // Marker erstellen
+            const color = r.status === "offen" ? "#2e7d32" : "#c62828";
+            const marker = L.circleMarker([r.lat, r.lng], {
+                radius: 10, color: "white", weight: 2, fillColor: color, fillOpacity: 0.9
+            });
+
+            marker.bindPopup(`
+                <div style="font-family: sans-serif;">
+                    <b style="font-size:14px;">${r.name}</b><br>
+                    ${r.city} (${r.state})<br>
+                    <hr>
+                    <b>Folge:</b> Staffel ${r.season}, Ep. ${r.episodeNum}<br>
+                    <b>Status:</b> ${r.status.toUpperCase()}<br>
+                    <i style="color:gray;">${r.note || ""}</i><br><br>
+                    <a href="https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}" target="_blank" class="route-btn">Route berechnen</a>
+                </div>
+            `);
+            cluster.addLayer(marker);
+
+            // Tabellenzeile erstellen
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td><b>${r.name}</b></td>
+                <td>${r.city}</td>
+                <td>${r.episode}</td>
+                <td>${getStatusBadge(r.status)}</td>
+                <td><a href="https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}" target="_blank" class="route-btn">🗺 Route</a></td>
+            `;
+
+            row.addEventListener("click", () => {
+                map.setView([r.lat, r.lng], 15);
+                marker.openPopup();
+                document.querySelectorAll("tr").forEach(tr => tr.classList.remove("highlight-row"));
+                row.classList.add("highlight-row");
+            });
+
+            document.getElementById("tableBody").appendChild(row);
+        });
+    }
+
+    function sortTable(key) {
+        currentSort.asc = (currentSort.key === key) ? !currentSort.asc : true;
+        currentSort.key = key;
+
+        restaurants.sort((a, b) => {
+            let valA = a[key].toString().toLowerCase();
+            let valB = b[key].toString().toLowerCase();
+            return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        });
+        update();
+    }
+
+    // Daten laden (Basierend auf deiner CSV Struktur)
+    fetch("restaurants.csv")
+        .then(res => res.text())
+        .then(data => {
+            const rows = data.trim().split("\n").slice(1);
+            restaurants = rows.map(line => {
+                const c = parseCSVLine(line);
+                if (c.length < 8) return null;
+                return {
+                    name: c[0], city: c[1], state: c[2],
+                    season: c[3], episodeNum: c[4],
+                    episode: "S" + c[3] + " E" + c[4],
+                    lat: parseFloat(c[5]), lng: parseFloat(c[6]),
+                    status: c[7].toLowerCase(),
+                    note: c[8] || ""
+                };
+            }).filter(x => x && !isNaN(x.lat));
+
+            // Filter füllen
+            const states = [...new Set(restaurants.map(r => r.state))].sort();
+            const seasons = [...new Set(restaurants.map(r => r.season))].sort((a, b) => a - b);
+
+            const blSelect = document.getElementById("filter-bundesland");
+            states.forEach(s => {
+                const opt = new Option(s, s);
+                blSelect.add(opt);
+            });
+
+            const stSelect = document.getElementById("filter-staffel");
+            seasons.forEach(s => {
+                const opt = new Option("Staffel " + s, s);
+                stSelect.add(opt);
+            });
+
+            update();
         });
 
-        document.getElementById("table").appendChild(row);
-    });
-}
+    // Event Listener
+    document.getElementById("search").addEventListener("input", update);
+    document.getElementById("filter-status").addEventListener("change", update);
+    document.getElementById("filter-bundesland").addEventListener("change", update);
+    document.getElementById("filter-staffel").addEventListener("change", update);
 
-fetch("restaurants.csv").then(r=>r.text()).then(data=>{
-    const rows = data.trim().split("\n").slice(1);
-
-    restaurants = rows.map(line=>{
-        const c = parseCSVLine(line);
-        if(c.length < 8) return null;
-
-        // Spalten: name, city, state, season, episode, latitude, longitude, status
-        return {
-            name: c[0],
-            city: c[1],
-            state: c[2],
-            episode: "S"+c[3]+"E"+c[4],
-            lat: parseFloat(c[5]),
-            lng: parseFloat(c[6]),
-            status: c[7].toLowerCase()
-        };
-    }).filter(x=>x && !isNaN(x.lat) && !isNaN(x.lng));
-
-    // Bundesländer & Staffeln dynamisch füllen
-    let states = [...new Set(restaurants.map(r=>r.state))].sort();
-    let staffeln = [...new Set(restaurants.map(r=>r.episode.substring(1, r.episode.indexOf("E"))))].sort();
-
-    states.forEach(s=>{
-        let opt=document.createElement("option");
-        opt.value=s; opt.textContent=s;
-        document.getElementById("filter-bundesland").appendChild(opt);
-    });
-
-    staffeln.forEach(s=>{
-        let opt=document.createElement("option");
-        opt.value=s; opt.textContent="Staffel "+s;
-        document.getElementById("filter-staffel").appendChild(opt);
-    });
-
-    update();
-}).catch(err=>console.error("Fehler beim Laden der CSV:", err));
-
-document.getElementById("search").addEventListener("input", update);
-document.getElementById("filter-status").addEventListener("change", update);
-document.getElementById("filter-bundesland").addEventListener("change", update);
-document.getElementById("filter-staffel").addEventListener("change", update);
 </script>
 </body>
 </html>

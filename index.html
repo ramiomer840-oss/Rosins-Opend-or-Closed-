@@ -16,29 +16,98 @@
         :root {
             --rosin-red: #b71c1c;
             --bg-gray: #f4f4f4;
+            --text-dark: #333;
         }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg-gray); }
-        header { background: var(--rosin-red); color: white; padding: 25px; text-align: center; font-size: 24px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: var(--bg-gray); color: var(--text-dark); }
         
-        #controls { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 20px; background: white; border-bottom: 1px solid #ddd; }
-        input, select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 14px; min-width: 180px; }
+        header { 
+            background: var(--rosin-red); 
+            color: white; 
+            padding: 20px; 
+            text-align: center; 
+            font-size: 26px; 
+            font-weight: bold; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3); 
+        }
         
-        #map { height: 550px; margin: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 1px solid #ddd; }
+        #controls { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 15px; 
+            justify-content: center; 
+            padding: 20px; 
+            background: white; 
+            border-bottom: 1px solid #ddd; 
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
         
-        .container { max-width: 1200px; margin: auto; }
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 50px; }
-        th, td { padding: 14px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f8f8f8; cursor: pointer; user-select: none; transition: background 0.2s; }
-        th:hover { background: #eee; }
+        input, select { 
+            padding: 10px 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            min-width: 200px; 
+            outline: none;
+        }
+        
+        input:focus { border-color: var(--rosin-red); box-shadow: 0 0 5px rgba(183, 28, 28, 0.2); }
+
+        #map { 
+            height: 500px; 
+            margin: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15); 
+            border: 1px solid #ddd; 
+        }
+        
+        .container { max-width: 1300px; margin: auto; padding: 0 20px; }
+        
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            background: white; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+            margin-bottom: 50px; 
+        }
+        
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: #f9f9f9; cursor: pointer; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; color: #666; }
+        th:hover { background: #f0f0f0; }
+        
         tr:hover { background: #fffcf0; cursor: pointer; }
-        .highlight-row { background: #fff9c4 !important; }
+        .highlight-row { background: #fff9c4 !important; border-left: 5px solid var(--rosin-red); }
         
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: white; }
+        .badge { 
+            padding: 5px 10px; 
+            border-radius: 20px; 
+            font-size: 11px; 
+            font-weight: bold; 
+            color: white; 
+            display: inline-block;
+            text-align: center;
+            min-width: 80px;
+        }
         .status-offen { background: #2e7d32; }
         .status-geschlossen { background: #c62828; }
 
-        .route-btn { text-decoration: none; color: #1976d2; font-weight: bold; border: 1px solid #1976d2; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .route-btn { 
+            text-decoration: none; 
+            color: #1976d2; 
+            font-weight: bold; 
+            border: 1px solid #1976d2; 
+            padding: 6px 12px; 
+            border-radius: 4px; 
+            font-size: 12px; 
+            transition: 0.2s;
+        }
         .route-btn:hover { background: #1976d2; color: white; }
+
+        .popup-content b { font-size: 16px; color: var(--rosin-red); }
+        .popup-content hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -46,11 +115,11 @@
 <header>Rosins Restaurants – Der interaktive Guide</header>
 
 <div id="controls">
-    <input id="search" type="text" placeholder="Suche (Name, Stadt, Episode...)" />
+    <input id="search" type="text" placeholder="Restaurant oder Stadt suchen..." />
     <select id="filter-status">
         <option value="alle">Alle Status</option>
-        <option value="offen">Offen</option>
-        <option value="geschlossen">Geschlossen</option>
+        <option value="offen">Nur Geöffnet</option>
+        <option value="geschlossen">Nur Geschlossen</option>
     </select>
     <select id="filter-bundesland">
         <option value="alle">Alle Bundesländer</option>
@@ -68,7 +137,7 @@
             <tr>
                 <th onclick="sortTable('name')">Restaurant ↕</th>
                 <th onclick="sortTable('city')">Stadt ↕</th>
-                <th onclick="sortTable('episode')">Episode ↕</th>
+                <th onclick="sortTable('episode')">Folge ↕</th>
                 <th onclick="sortTable('status')">Status ↕</th>
                 <th>Navigation</th>
             </tr>
@@ -78,9 +147,10 @@
 </div>
 
 <script>
+    // Karte initialisieren
     const map = L.map("map").setView([51.1657, 10.4515], 6);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '© OpenStreetMap'
+        attribution: '© OpenStreetMap Mitwirkende'
     }).addTo(map);
 
     let restaurants = [];
@@ -88,15 +158,28 @@
     const cluster = L.markerClusterGroup();
     map.addLayer(cluster);
 
+    // Hilfsfunktion für Status-Badges
     function getStatusBadge(s) {
-        return `<span class="badge status-${s}">${s.toUpperCase()}</span>`;
+        const displayStatus = s === "offen" ? "OFFEN" : "ZU";
+        const cls = s === "offen" ? "status-offen" : "status-geschlossen";
+        return `<span class="badge ${cls}">${displayStatus}</span>`;
     }
 
+    // Sicherer CSV Parser (behandelt Kommas in Anführungszeichen)
     function parseCSVLine(line) {
-        const regex = /(".*?"|[^",]+)(?=,|$)/g;
-        return line.match(regex)?.map(e => e.replace(/"/g, "").trim()) || [];
+        const result = [];
+        let cur = '';
+        let inQuotes = false;
+        for (let char of line) {
+            if (char === '"') { inQuotes = !inQuotes; }
+            else if (char === ',' && !inQuotes) { result.push(cur.trim()); cur = ''; }
+            else { cur += char; }
+        }
+        result.push(cur.trim());
+        return result;
     }
 
+    // Haupt-Update-Funktion (Filter & Suche)
     function update() {
         const searchVal = document.getElementById("search").value;
         const fStatus = document.getElementById("filter-status").value;
@@ -105,18 +188,22 @@
 
         let filtered = [...restaurants];
 
-        // Fuzzy Search
+        // 1. Suche
         if (searchVal) {
-            const fuse = new Fuse(restaurants, { keys: ["name", "city", "episode", "state"], threshold: 0.3 });
+            const fuse = new Fuse(restaurants, { 
+                keys: ["name", "city", "note"], 
+                threshold: 0.3 
+            });
             filtered = fuse.search(searchVal).map(r => r.item);
         }
 
-        // Filter
-        filtered = filtered.filter(r => 
-            (fStatus === "alle" || r.status === fStatus) &&
-            (fBL === "alle" || r.state === fBL) &&
-            (fStaffel === "alle" || r.season === fStaffel)
-        );
+        // 2. Filter (Status, Bundesland, Staffel)
+        filtered = filtered.filter(r => {
+            const matchStatus = (fStatus === "alle" || r.status === fStatus);
+            const matchBL = (fBL === "alle" || r.state === fBL);
+            const matchStaffel = (fStaffel === "alle" || r.season === fStaffel);
+            return matchStatus && matchBL && matchStaffel;
+        });
 
         renderUI(filtered);
     }
@@ -126,33 +213,36 @@
         cluster.clearLayers();
 
         data.forEach(r => {
-            // Marker erstellen
-            const color = r.status === "offen" ? "#2e7d32" : "#c62828";
+            // Marker-Farbe
+            const markerColor = r.status === "offen" ? "#2e7d32" : "#c62828";
+            
             const marker = L.circleMarker([r.lat, r.lng], {
-                radius: 10, color: "white", weight: 2, fillColor: color, fillOpacity: 0.9
+                radius: 9, color: "#fff", weight: 2, fillColor: markerColor, fillOpacity: 0.9
             });
 
+            const mapsUrl = `https://www.google.com/maps?q=${r.lat},${r.lng}`;
+
             marker.bindPopup(`
-                <div style="font-family: sans-serif;">
-                    <b style="font-size:14px;">${r.name}</b><br>
+                <div class="popup-content">
+                    <b>${r.name}</b><br>
                     ${r.city} (${r.state})<br>
                     <hr>
-                    <b>Folge:</b> Staffel ${r.season}, Ep. ${r.episodeNum}<br>
-                    <b>Status:</b> ${r.status.toUpperCase()}<br>
-                    <i style="color:gray;">${r.note || ""}</i><br><br>
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}" target="_blank" class="route-btn">Route berechnen</a>
+                    Staffel ${r.season}, Folge ${r.episodeNum}<br>
+                    <strong>Status:</strong> ${r.status.toUpperCase()}<br>
+                    <small><i>${r.note}</i></small><br><br>
+                    <a href="${mapsUrl}" target="_blank" class="route-btn">Google Maps öffnen</a>
                 </div>
             `);
             cluster.addLayer(marker);
 
-            // Tabellenzeile erstellen
+            // Tabelle
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td><b>${r.name}</b></td>
                 <td>${r.city}</td>
-                <td>${r.episode}</td>
+                <td>S${r.season}E${r.episodeNum}</td>
                 <td>${getStatusBadge(r.status)}</td>
-                <td><a href="https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lng}" target="_blank" class="route-btn">🗺 Route</a></td>
+                <td><a href="${mapsUrl}" target="_blank" class="route-btn">🗺 Route</a></td>
             `;
 
             row.addEventListener("click", () => {
@@ -169,7 +259,6 @@
     function sortTable(key) {
         currentSort.asc = (currentSort.key === key) ? !currentSort.asc : true;
         currentSort.key = key;
-
         restaurants.sort((a, b) => {
             let valA = a[key].toString().toLowerCase();
             let valB = b[key].toString().toLowerCase();
@@ -178,44 +267,45 @@
         update();
     }
 
-    // Daten laden (Basierend auf deiner CSV Struktur)
+    // Daten laden
     fetch("restaurants.csv")
         .then(res => res.text())
-        .then(data => {
-            const rows = data.trim().split("\n").slice(1);
-            restaurants = rows.map(line => {
-                const c = parseCSVLine(line);
-                if (c.length < 8) return null;
-                return {
-                    name: c[0], city: c[1], state: c[2],
-                    season: c[3], episodeNum: c[4],
-                    episode: "S" + c[3] + " E" + c[4],
-                    lat: parseFloat(c[5]), lng: parseFloat(c[6]),
-                    status: c[7].toLowerCase(),
-                    note: c[8] || ""
-                };
-            }).filter(x => x && !isNaN(x.lat));
+        .then(csvText => {
+            const lines = csvText.trim().split("\n").slice(1);
+            
+            restaurants = lines.map(line => {
+                const cols = parseCSVLine(line);
+                if (cols.length < 8) return null;
 
-            // Filter füllen
+                return {
+                    name: cols[0],
+                    city: cols[1],
+                    state: cols[2],
+                    season: cols[3],
+                    episodeNum: cols[4],
+                    episode: "S" + cols[3] + "E" + cols[4],
+                    lat: parseFloat(cols[5]),
+                    lng: parseFloat(cols[6]),
+                    status: cols[7].toLowerCase().trim(), // Wichtig für Filter!
+                    note: cols[8] || ""
+                };
+            }).filter(r => r && !isNaN(r.lat));
+
+            // Filter dynamisch füllen
             const states = [...new Set(restaurants.map(r => r.state))].sort();
-            const seasons = [...new Set(restaurants.map(r => r.season))].sort((a, b) => a - b);
+            const seasons = [...new Set(restaurants.map(r => r.season))].sort((a,b) => a-b);
 
             const blSelect = document.getElementById("filter-bundesland");
-            states.forEach(s => {
-                const opt = new Option(s, s);
-                blSelect.add(opt);
-            });
+            states.forEach(s => blSelect.add(new Option(s, s)));
 
             const stSelect = document.getElementById("filter-staffel");
-            seasons.forEach(s => {
-                const opt = new Option("Staffel " + s, s);
-                stSelect.add(opt);
-            });
+            seasons.forEach(s => stSelect.add(new Option("Staffel " + s, s)));
 
             update();
-        });
+        })
+        .catch(err => console.error("CSV konnte nicht geladen werden:", err));
 
-    // Event Listener
+    // Event-Listener
     document.getElementById("search").addEventListener("input", update);
     document.getElementById("filter-status").addEventListener("change", update);
     document.getElementById("filter-bundesland").addEventListener("change", update);

@@ -74,7 +74,6 @@ tr:hover{
 }
 </style>
 </head>
-
 <body>
 
 <header>Rosins Restaurants – Interaktive Karte</header>
@@ -125,6 +124,7 @@ function statusColor(s){
 }
 
 function parseCSVLine(line) {
+    // Einfacher CSV-Parser, der Anführungszeichen ignoriert
     return line.match(/(".*?"|[^",]+)(?=,|$)/g)?.map(e=>e.replace(/"/g,"").trim()) || [];
 }
 
@@ -189,24 +189,17 @@ fetch("restaurants.csv").then(r=>r.text()).then(data=>{
 
     restaurants = rows.map(line=>{
         const c = parseCSVLine(line);
-        if(c.length < 8) return null; // mindestens 8 Spalten: name, city, state, season, episode, status?, lat, lng
+        if(c.length < 8) return null;
 
-        // Spaltenreihenfolge: name, city, state, season, episode, latitude, longitude
-        // Die CSV hat keine Status-Spalte, daher setzen wir standardmäßig "unbekannt"
-        let status = "unbekannt";
-        let lat = parseFloat(c[6]);
-        let lng = parseFloat(c[7]);
-
-        // Falls die CSV tatsächlich eine Status-Spalte enthält (z.B. nach Episode), muss die Indizierung angepasst werden.
-        // Wir gehen von der gelieferten CSV aus: name,city,state,season,episode,latitude,longitude
+        // Spalten: name, city, state, season, episode, latitude, longitude, status
         return {
             name: c[0],
             city: c[1],
             state: c[2],
             episode: "S"+c[3]+"E"+c[4],
-            status: status,
-            lat: lat,
-            lng: lng
+            lat: parseFloat(c[5]),
+            lng: parseFloat(c[6]),
+            status: c[7].toLowerCase()
         };
     }).filter(x=>x && !isNaN(x.lat) && !isNaN(x.lng));
 

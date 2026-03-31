@@ -5,16 +5,16 @@
 <title>Rosins Restaurants – Interaktive Karte</title>
 
 <!-- Leaflet -->
-https://unpkg.com/leaflet/dist/leaflet.css
-https://unpkg.com/leaflet/dist/leaflet.js
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <!-- MarkerCluster -->
-https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css
-https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css
-https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
 <!-- Fuzzy Search -->
-https://cdn.jsdelivr.net/npm/fuse.js@6.6.2script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
 <style>
 body{
@@ -98,16 +98,16 @@ tr:hover{
 <div id="map"></div>
 
 <table>
-<thead>
-<tr>
-    <th data-sort="name">Restaurant</th>
-    <th data-sort="city">Stadt</th>
-    <th data-sort="episode">Episode</th>
-    <th data-sort="status">Status</th>
-    <th>Navigation</th>
-</tr>
-</thead>
-<tbody id="table"></tbody>
+    <thead>
+        <tr>
+            <th data-sort="name">Restaurant</th>
+            <th data-sort="city">Stadt</th>
+            <th data-sort="episode">Episode</th>
+            <th data-sort="status">Status</th>
+            <th>Navigation</th>
+        </tr>
+    </thead>
+    <tbody id="table"></tbody>
 </table>
 
 <script>
@@ -148,7 +148,6 @@ function update(){
     );
 
     document.getElementById("table").innerHTML = "";
-
     cluster.clearLayers();
 
     list.forEach(r=>{
@@ -171,7 +170,7 @@ function update(){
             <td>${r.city}</td>
             <td>${r.episode}</td>
             <td>${r.status}</td>
-            <td>https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}Route</a></td>
+            <td><a href="https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}" target="_blank">Route</a></td>
         `;
 
         row.addEventListener("click", ()=>{
@@ -183,24 +182,35 @@ function update(){
 
         document.getElementById("table").appendChild(row);
     });
-
 }
+
 fetch("restaurants.csv").then(r=>r.text()).then(data=>{
     const rows = data.trim().split("\n").slice(1);
 
     restaurants = rows.map(line=>{
         const c = parseCSVLine(line);
-        if(c.length < 7) return null;
+        if(c.length < 8) return null; // mindestens 8 Spalten: name, city, state, season, episode, status?, lat, lng
 
+        // Spaltenreihenfolge: name, city, state, season, episode, latitude, longitude
+        // Die CSV hat keine Status-Spalte, daher setzen wir standardmäßig "unbekannt"
+        let status = "unbekannt";
+        let lat = parseFloat(c[6]);
+        let lng = parseFloat(c[7]);
+
+        // Falls die CSV tatsächlich eine Status-Spalte enthält (z.B. nach Episode), muss die Indizierung angepasst werden.
+        // Wir gehen von der gelieferten CSV aus: name,city,state,season,episode,latitude,longitude
         return {
-            name:c[0], city:c[1], state:c[2],
-            episode:"S"+c[3]+"E"+c[4],
-            status:c[5],
-            lat:parseFloat(c[6]), lng:parseFloat(c[7])
+            name: c[0],
+            city: c[1],
+            state: c[2],
+            episode: "S"+c[3]+"E"+c[4],
+            status: status,
+            lat: lat,
+            lng: lng
         };
-    }).filter(x=>x);
+    }).filter(x=>x && !isNaN(x.lat) && !isNaN(x.lng));
 
-    // Füllt Bundesländer & Staffeln dynamisch
+    // Bundesländer & Staffeln dynamisch füllen
     let states = [...new Set(restaurants.map(r=>r.state))].sort();
     let staffeln = [...new Set(restaurants.map(r=>r.episode.substring(1, r.episode.indexOf("E"))))].sort();
 
@@ -217,13 +227,12 @@ fetch("restaurants.csv").then(r=>r.text()).then(data=>{
     });
 
     update();
-});
+}).catch(err=>console.error("Fehler beim Laden der CSV:", err));
 
 document.getElementById("search").addEventListener("input", update);
 document.getElementById("filter-status").addEventListener("change", update);
 document.getElementById("filter-bundesland").addEventListener("change", update);
 document.getElementById("filter-staffel").addEventListener("change", update);
-
 </script>
 </body>
 </html>
